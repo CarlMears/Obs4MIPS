@@ -1,0 +1,7 @@
+read me file for 
+E:\AMSU_MSU_simulation\abs_tables\amsu_09_cld_abs_table_per_Pa.dat
+Cloud absorption coefficients per pascal as a function of temperature, pressure, and specific humidity.
+Multiply by cloud density in g/cm^3 to get absorption in nepers/Pa
+
+Absorption calculated by IDL version of fdaray.f
+results identical to those found by skytemp2

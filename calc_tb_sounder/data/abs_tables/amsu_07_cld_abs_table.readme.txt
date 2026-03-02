@@ -1,0 +1,6 @@
+read me file for E:\AMSU_MSU_simulation\abs_tables\amsu_07_cld_abs_table.dat
+Cloud absorption coefficients as a function of temperature.
+Multiply by cloud density in g/cm^3 to get absorption in nepers/cm
+
+Absorption calculated by IDL version of fdaray.f
+results identical to those found by skytemp2
