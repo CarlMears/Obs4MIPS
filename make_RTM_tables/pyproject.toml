@@ -1,0 +1,29 @@
+[build-system]
+# Use meson-python as the bridge between pip and Meson
+requires = ["meson-python >= 0.14.0", "ninja", "numpy"]
+build-backend = "mesonpy"
+
+[project]
+name = "compute_absorption_tables"
+version = "0.1.0"
+description = "Fortran RTM tables via f2py and Meson"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Carl Mears", email = "mears@remss.com"},
+]
+# Runtime dependencies
+dependencies = [
+    "numpy >= 1.21.0",
+    "matplotlib",
+]
+
+[tool.meson-python.args]
+# Optional: pass flags to 'meson setup'
+# setup = ["-Dbuildtype=release"]
+# Optional: pass flags to 'meson compile'
+# compile = ["-j4"]
+
+[tool.pytest.ini_options]
+testpaths = ["python"]

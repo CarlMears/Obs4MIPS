@@ -1,0 +1,16 @@
+Build started at 2026-02-20T10:58:09.082102
+Main binary: c:\program files\python38\python.exe
+Build Options: -Dbuildtype=debug
+Python system: Windows
+The Meson build system
+Version: 0.56.0
+Source dir: \\ops1d\m\Obs4MIPs\make_RTM_tables
+Build dir: \\ops1d\m\Obs4MIPs\make_RTM_tables\builddir
+Build type: native build
+Project name: RSS Radiometer Merge
+Project version: 1.0.0
+None of 'FC' are defined in the environment, not changing global flags.
+None of 'FFLAGS' are defined in the environment, not changing global flags.
+None of 'LDFLAGS' are defined in the environment, not changing global flags.
+
+\\ops1d\m\Obs4MIPs\make_RTM_tables\meson.build:1:0: ERROR: Compiler ifort can not compile programs.
