@@ -1,4 +1,4 @@
-project('RSS Radiometer Merge', 'c', 'fortran', version : '1.0.0', default_options: ['b_vscrt=static_from_buildtype'])
+project('RSS Make Abs Tables', 'c', 'fortran', version : '1.0.0', default_options: ['b_vscrt=static_from_buildtype'])
 
 fortran_compiler = meson.get_compiler('fortran')
 
@@ -43,7 +43,8 @@ date_src = ['src/date_and_time.f90']
 logging_src = ['src/logging.f90']
 atmos_abs_src =['src/atmos_abs_routines.f90',
                'src/dielectric_meissner_wentz.f90']
-sat_constants_src = ['src/msu_constants.f90', 'src/amsu_constants.f90']
+sat_constants_src = ['src/msu_constants.f90',
+                     'src/amsu_constants.f90']
 table_src = ['src/make_absorption_table_t_q.f90']
 driver_src = ['src/compute_absorption_tables_amsu_dsb_driver.f90']
 
@@ -94,3 +95,57 @@ py.extension_module('compute_absorption_tables_amsu',
   install : true
 )
 
+# -------------------------------------
+# This build the MSU version
+# -------------------------------------
+
+sat_constants_src = ['src/msu_constants.f90', 'src/amsu_constants.f90']
+table_src = ['src/make_absorption_table_t_q.f90']
+driver_src = ['src/compute_absorption_tables_msu_driver.f90']
+
+fortran_src = [nan_src,
+       date_src,
+       atmos_abs_src,
+       sat_constants_src,
+       table_src,]
+
+       
+#create the executeable for vapor
+exe = executable('test_compute_absorption_tables_msu', 
+                  [driver_src,fortran_src],
+                  install      : true, 
+                  dependencies : [
+                     ],
+                  fortran_args : fortran_args)
+
+py_mod = import('python')
+py = py_mod.find_installation('python3.13')
+py_dep = py.dependency()
+netcdf_dep = dependency('netcdf-fortran', required: true)
+
+f2py_wrapper = custom_target('f2py_wrapper_msu',
+  input : fortran_src,
+  output : ['compute_absorption_tables_msumodule.c', 'compute_absorption_tables_msu-f2pywrappers2.f90'], # f2py often generates a second .f file
+  command : [py, '-m', 'numpy.f2py', '@INPUT@', '-m', 'compute_absorption_tables_msu', '--lower'] #,
+  #'only:','compute_absorption_tables_amsu_dsb','compute_absorption_tables_amsu', ':']
+) # I had to change output files to be the names of the generated files, because f2py doesn't always generate the same .f file name, 
+  # and meson needs to know the exact output file names to use them in the extension module.
+
+incdir_numpy = run_command(py,
+  ['-c', 'import numpy; print(numpy.get_include())'],
+  check : true
+).stdout().strip()
+
+incdir_f2py = run_command(py,
+  ['-c', 'import numpy.f2py; print(numpy.f2py.get_include())'],
+  check : true
+).stdout().strip()
+
+fortranobject_c = incdir_f2py / 'fortranobject.c'
+
+py.extension_module('compute_absorption_tables_msu',
+  [f2py_wrapper, fortran_src,fortranobject_c],
+  include_directories: [incdir_numpy, incdir_f2py],
+  dependencies : [py_dep, netcdf_dep],
+  install : true
+)
