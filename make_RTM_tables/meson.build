@@ -1,4 +1,4 @@
-project('RSS Make Abs Tables', 'c', 'fortran', version : '1.0.0', default_options: ['b_vscrt=static_from_buildtype'])
+project('RSS Make Abs Tables', 'c', 'fortran', version : '1.0.0', default_options: ['b_vscrt=static_from_buildtype','warning_level=1'])
 
 fortran_compiler = meson.get_compiler('fortran')
 
@@ -38,15 +38,15 @@ endif
 
 # Add the source code.
 
-nan_src = ['src/NAN_support_intel.f90']
-date_src = ['src/date_and_time.f90']
-logging_src = ['src/logging.f90']
-atmos_abs_src =['src/atmos_abs_routines.f90',
-               'src/dielectric_meissner_wentz.f90']
-sat_constants_src = ['src/msu_constants.f90',
-                     'src/amsu_constants.f90']
-table_src = ['src/make_absorption_table_t_q.f90']
-driver_src = ['src/compute_absorption_tables_amsu_dsb_driver.f90']
+nan_src = files('src/NAN_support_intel.f90')
+date_src = files('src/date_and_time.f90')
+logging_src = files('src/logging.f90')
+atmos_abs_src = files('src/atmos_abs_routines.f90',
+               'src/dielectric_meissner_wentz.f90')
+sat_constants_src = files('src/msu_constants.f90',
+                     'src/amsu_constants.f90')
+table_src = files('src/make_absorption_table_t_q.f90')
+driver_src = files('src/compute_absorption_tables_amsu_dsb_driver.f90')
 
 fortran_src = [nan_src,
        date_src,
@@ -56,12 +56,12 @@ fortran_src = [nan_src,
 
        
 #create the executeable for vapor
-exe = executable('test_compute_absorption_tables_amsu_dsb', 
-                  [driver_src,fortran_src],
-                  install      : true, 
-                  dependencies : [
-                     ],
-                  fortran_args : fortran_args)
+# exe = executable('test_compute_absorption_tables_amsu_dsb', 
+#                   [driver_src,fortran_src],
+#                   install      : true, 
+#                   dependencies : [
+#                      ],
+#                   fortran_args : fortran_args)
 
 py_mod = import('python')
 py = py_mod.find_installation('python3.13')
@@ -87,6 +87,8 @@ incdir_f2py = run_command(py,
 ).stdout().strip()
 
 fortranobject_c = incdir_f2py / 'fortranobject.c'
+
+incdir = include_directories('src')
 
 py.extension_module('compute_absorption_tables_amsu',
   [f2py_wrapper, fortran_src,fortranobject_c],
