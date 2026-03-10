@@ -1,6 +1,6 @@
 
 module AMSU_constants
-
+    implicit none
     real(8),parameter        :: A_SMALL_NUMBER = 1.0d-10
     real(8),parameter        :: TWO_PI = 6.283185307d0
     real(8),parameter        :: PI = 3.141592654d0
