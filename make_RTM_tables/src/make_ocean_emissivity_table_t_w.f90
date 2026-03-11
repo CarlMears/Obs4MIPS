@@ -1,7 +1,6 @@
 module make_ocean_emissivity_table_t_w 
 
     use, intrinsic :: iso_fortran_env, only: real32,real64
-    use msu_constants
     use amsu_constants, only: AMSU_A_Freq, AMSU_A_Freq_Split_1, AMSU_A_BANDWIDTH, AMSU_A_Polarization, AMSU_NOM_EIAS, AMSU_VIEW_ANGLES
     use ocean_surface_emiss, only: surterm
 
@@ -14,14 +13,14 @@ module make_ocean_emissivity_table_t_w
 
 contains
 
-    subroutine compute_ocean_emissivity_tables_amsu_dsb(channel, num_T, num_W, T0, Delta_T, W0, Delta_W, emiss_table, emiss_table_per_Pa)
+    subroutine compute_ocean_emissivity_tables_amsu_dsb(channel, num_T, num_W, T0, Delta_T, W0, Delta_W, emiss_table)
 
         integer(4), intent(in) :: channel
         integer(4), intent(in) :: num_T, num_W
         real(4), intent(in) :: T0, Delta_T, W0, Delta_W
         real(4), dimension(0:num_T,0:num_W,1:15), intent(out) :: emiss_table
 	
-	    real(4),dimension(0:200,0:30,1:15,1:2)  :: emiss_table_by_pol  ! temperature,fov,pol (vpol = 1 hpol = 2)
+	    real(4),dimension(0:num_T,0:num_W,1:15,1:2)  :: emiss_table_by_pol  ! temperature,fov,pol (vpol = 1 hpol = 2)
 	
 
 	    integer(4)							:: polarization
@@ -80,7 +79,7 @@ contains
                 do W_index = 0,num_W
                     W = W0 + Delta_W*W_index
                     call surterm(freq,tht,sst,W, emiss)
-                    emiss_table(T_index,W_index,fov,:) = emiss_table(T_index,W_index,fov,:) + emiss*amsu_freq_wt(freq_index)
+                    emiss_table_by_pol(T_index,W_index,fov,:) = emiss_table_by_pol(T_index,W_index,fov,:) + emiss*amsu_freq_wt(freq_index)
                 enddo
                 enddo
             enddo
@@ -93,12 +92,12 @@ contains
             do T_index = 0,num_T
                 do W_index = 0,num_W
                     if (polarization .eq. 1) then !V-pol
-                        emiss_table_comb(T_index,W_index,fov)	=	 &
-                            emiss_table(T_index,W_index,fov,1)*cosd(theta_view)*cosd(theta_view) + &
-                            emiss_table(T_index,W_index,fov,2)*sind(theta_view)*sind(theta_view)
+                        emiss_table(T_index,W_index,fov)	=	 &
+                            emiss_table_by_pol(T_index,W_index,fov,1)*cosd(theta_view)*cosd(theta_view) + &
+                            emiss_table_by_pol(T_index,W_index,fov,2)*sind(theta_view)*sind(theta_view)
                     else if (polarization .eq. 2) then !H-pol
-                        emiss_table_comb(T_index,W_index,fov)	=	  &
-                            emiss_table(T_index,W_index,fov,2)*cosd(theta_view)*cosd(theta_view) + &
+                        emiss_table(T_index,W_index,fov)	=	  &
+                            emiss_table_by_pol(T_index,W_index,fov,2)*cosd(theta_view)*cosd(theta_view) + &
                             emiss_table(T_index,W_index,fov,1)*sind(theta_view)*sind(theta_view)
                     endif
                 enddo
