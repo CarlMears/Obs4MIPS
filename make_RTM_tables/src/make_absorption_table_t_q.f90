@@ -45,7 +45,7 @@ contains
         real(4) :: T, P, PV, q, freq
         real(4) :: ao, av, total_abs
 
-        real(8), parameter :: M_W_air = 2.8966D-2
+        real(8), parameter :: M_W_air = 2.89660D-2
         real(8), parameter :: M_W_H2O = 1.8015324D-2
         real(8), parameter :: R_GAS = 8.3145112D0
         real(8), parameter :: g = 9.80665D0
