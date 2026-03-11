@@ -52,16 +52,17 @@ contains
         return
     end subroutine read_abs_table_q_AMSU
 
-    subroutine read_abs_table_q_AMSU_netcdf(amsu_channel,path_to_data,err)
+    subroutine read_abs_table_q_AMSU_netcdf(amsu_channel,path_to_data,ivap,ioxy,err)
 
         implicit none
 
         integer(4),intent(in)                 :: amsu_channel
         character(len = *), intent(in)        :: path_to_data
+        integer(4),intent(in)                 :: ivap,ioxy
         integer(4),intent(out)                :: err
         character(len = 200)                  :: file
         integer(4)                            :: numt,nump,numq
-        integer(4)                            :: ivap,ioxy,channel
+        integer(4)                            :: channel
         integer(4)                            :: ncid,varid
         integer(4)                            :: status
         integer(4)                            :: t_index,p_index,q_index
@@ -71,8 +72,8 @@ contains
         real(4),dimension(0:num_q,0:num_p,0:num_t) :: abs_table_q_netcdf
         
 
-        write(file,100) trim(path_to_data),amsu_channel
-100     format(a,'/abs_tables/amsu_',i2.2,'_abs_table_q_per_Pa.nc')
+        write(file,100) trim(path_to_data),amsu_channel,ivap,ioxy
+100     format(a,'/abs_tables/amsu_',i2.2,'_abs_table_q_per_Pa_',i1.1,'.',i1.1,'.nc')
 
 
     
