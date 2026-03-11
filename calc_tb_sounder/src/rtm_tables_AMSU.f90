@@ -73,7 +73,7 @@ contains
         
 
         write(file,100) trim(path_to_data),amsu_channel,ivap,ioxy
-100     format(a,'/abs_tables/amsu_',i2.2,'_abs_table_q_per_Pa_',i1.1,'.',i1.1,'.nc')
+100     format(a,'/abs_tables/amsu_',i2.2,'_abs_table_per_Pa_q.',i1.1,'.',i1.1,'.nc')
         print *, "Reading AMSU absorption table from netCDF file: "
         print *, trim(file)
 
