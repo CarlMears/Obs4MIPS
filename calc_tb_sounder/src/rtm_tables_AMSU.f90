@@ -76,8 +76,6 @@ contains
 100     format(a,'/abs_tables/amsu_',i2.2,'_abs_table_per_Pa_q.',i1.1,'.',i1.1,'.nc')
         print *, "Reading AMSU absorption table from netCDF file: "
         print *, trim(file)
-
-
     
         status = nf90_open(trim(file), nf90_nowrite, ncid)
         if (status /= nf90_noerr) then
@@ -88,9 +86,10 @@ contains
 
         print *, "Successfully opened netCDF file. Reading variables..."
 
-        status = nf90_inq_varid(ncid, 'temperature', varid)
+        status = nf90_inq_varid(ncid, 'T', varid)
         if (status /= nf90_noerr) then
             err = status
+            print *, nf90_strerror(status)
             status = nf90_close(ncid)
             return
         endif
@@ -99,51 +98,63 @@ contains
         status = nf90_get_var(ncid, varid, t_vals)
         if (status /= nf90_noerr) then
             err = status
+            print *, nf90_strerror(status)
             status = nf90_close(ncid)
             return
         endif
         print *, "Successfully read temperature variable. Reading pressure variable..."
 
-        status = nf90_inq_varid(ncid, 'pressure', varid)
+        status = nf90_inq_varid(ncid, 'p', varid)
         if (status /= nf90_noerr) then
             err = status
+            print *, nf90_strerror(status)
             status = nf90_close(ncid)
             return
         endif
         status = nf90_get_var(ncid, varid, p_vals)
         if (status /= nf90_noerr) then
             err = status
+            print *, nf90_strerror(status)
             status = nf90_close(ncid)
             return
         endif
 
-        status = nf90_inq_varid(ncid, 'specific_humidity', varid)
+        status = nf90_inq_varid(ncid, 'q', varid)
         if (status /= nf90_noerr) then
             err = status
+            print *, nf90_strerror(status)
             status = nf90_close(ncid)
             return
         endif
         status = nf90_get_var(ncid, varid, q_vals)
         if (status /= nf90_noerr) then
             err = status
+            print *, nf90_strerror(status)
             status = nf90_close(ncid)
             return
         endif
 
-        status = nf90_inq_varid(ncid, 'absorptivity', varid)
+        status = nf90_inq_varid(ncid, 'absorption_per_Pa', varid)
         if (status /= nf90_noerr) then
             err = status
+            print *, nf90_strerror(status)
             status = nf90_close(ncid)
             return
         endif
         status = nf90_get_var(ncid, varid, abs_table_q_netcdf)
         if (status /= nf90_noerr) then
             err = status
+            print *, nf90_strerror(status)
             status = nf90_close(ncid)
             return
         endif
 
+        print *, "Successfully read absorption variable."
+        print, *, "Closing netCDF file."
+
         status = nf90_close(ncid)
+
+        print *,shape(abs_table_q_netcdf)
 
         numt = size(t_vals) - 1
         nump = size(p_vals) - 1
