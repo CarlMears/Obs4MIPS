@@ -13,7 +13,7 @@ module geomod10c
       private
       public fdem0_meissner_wentz
       public dielectric_meissner_wentz
-      public cosd,sind
+      !public cosd,sind
 
 contains
 
