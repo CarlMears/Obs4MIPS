@@ -1,4 +1,4 @@
-project('RSS Make Abs Tables', 'c', 'fortran', version : '1.0.0', default_options: ['b_vscrt=static_from_buildtype','warning_level=1'])
+project('RSS Make Abs Tables', 'c', 'fortran', version : '1.0.0', default_options: ['b_vscrt=static_from_buildtype','warning_level=0'])
 
 fortran_compiler = meson.get_compiler('fortran')
 
