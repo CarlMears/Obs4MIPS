@@ -120,7 +120,7 @@ contains
                     else if (polarization .eq. 2) then !H-pol
                         emiss_table(T_index,W_index,fov)	=	  &
                             emiss_table_by_pol(T_index,W_index,fov,2)*cosd(theta_view)*cosd(theta_view) + &
-                            emiss_table(T_index,W_index,fov,1)*sind(theta_view)*sind(theta_view)
+                            emiss_table_by_pol(T_index,W_index,fov,1)*sind(theta_view)*sind(theta_view)
                     endif
                 enddo
             enddo
