@@ -273,12 +273,13 @@ contains
 
             if ((freq_index == 0) .or. (freq_index == msu_num_freq-1)) then
                 msu_freq_wt(freq_index+1) = 0.25/(msu_num_freq-1.0)
-                msu_freq_wt(freq_index+1+msu_num_freq) = 0.25/(msu_num_freq-1.0)
             else
                 msu_freq_wt(freq_index+1) = 0.5/(msu_num_freq-1.0)
-                msu_freq_wt(freq_index+1+msu_num_freq) = 0.5/(msu_num_freq-1.0)
             endif
         enddo
+
+        print *, msu_freq_arr
+        print *, msu_freq_wt
         
         abs_table = 0.0
         abs_table_per_Pa = 0.0
