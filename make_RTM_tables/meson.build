@@ -114,19 +114,7 @@ py = py_mod.find_installation('python3.13')
 py_dep = py.dependency()
 netcdf_dep = dependency('netcdf-fortran', required: true)
 
-# -------------------------------------
-# This build the MSU version
-# -------------------------------------
 
-sat_constants_src = ['src/msu_constants.f90', 'src/amsu_constants.f90']
-table_src = ['src/make_absorption_table_t_q.f90']
-driver_src = ['src/compute_absorption_tables_msu_driver.f90']
-
-fortran_src = [nan_src,
-       date_src,
-       atmos_abs_src,
-       sat_constants_src,
-       table_src,]
 
 f2py_wrapper = custom_target('f2py_wrapper_amsu_emiss',
   input : fortran_src,
@@ -168,6 +156,20 @@ py = py_mod.find_installation('python3.13')
 py_dep = py.dependency()
 netcdf_dep = dependency('netcdf-fortran', required: true)
 
+# -------------------------------------
+# This build the MSU version
+# -------------------------------------
+
+sat_constants_src = ['src/msu_constants.f90', 'src/amsu_constants.f90']
+table_src = ['src/make_absorption_table_t_q.f90']
+driver_src = ['src/compute_absorption_tables_msu_driver.f90']
+
+fortran_src = [nan_src,
+       date_src,
+       atmos_abs_src,
+       sat_constants_src,
+       table_src,]
+
 f2py_wrapper = custom_target('f2py_wrapper_msu',
   input : fortran_src,
   output : ['compute_absorption_tables_msumodule.c', 'compute_absorption_tables_msu-f2pywrappers2.f90'], # f2py often generates a second .f file
@@ -194,3 +196,5 @@ py.extension_module('compute_absorption_tables_msu',
   dependencies : [py_dep, netcdf_dep],
   install : true
 )
+
+
