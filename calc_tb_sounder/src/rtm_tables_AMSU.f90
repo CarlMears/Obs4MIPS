@@ -150,7 +150,7 @@ contains
         endif
 
         print *, "Successfully read absorption variable."
-        print, *, "Closing netCDF file."
+        print *, "Closing netCDF file."
 
         status = nf90_close(ncid)
 
