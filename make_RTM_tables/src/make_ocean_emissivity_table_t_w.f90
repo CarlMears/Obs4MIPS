@@ -13,6 +13,28 @@ module make_ocean_emissivity_table_t_w
 
 contains
 
+    pure elemental function cosd(x)
+
+        real(4), intent(in) :: x
+        real(4) :: cosd
+
+        real(4), parameter :: PI_F32 = 4.0*atan(1.0)
+        real(4), parameter :: DEG2RAD_F32 = PI_F32/180.0
+
+        cosd = cos(x * DEG2RAD_F32)
+    end function cosd
+
+    pure elemental function sind(x)
+
+        real(4), intent(in) :: x
+        real(4) :: sind
+
+        real(4), parameter :: PI_F32 = 4.0*atan(1.0)
+        real(4), parameter :: DEG2RAD_F32 = PI_F32/180.0
+
+        sind = sin(x * DEG2RAD_F32)
+    end function sind
+
     subroutine compute_ocean_emissivity_tables_amsu_dsb(channel, num_T, num_W, T0, Delta_T, W0, Delta_W, emiss_table)
 
         integer(4), intent(in) :: channel
