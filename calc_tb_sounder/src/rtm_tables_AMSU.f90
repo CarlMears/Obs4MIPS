@@ -140,8 +140,6 @@ contains
         numt = size(t_vals) - 1
         nump = size(p_vals) - 1
         numq = size(q_vals) - 1
-        ivap = 0
-        ioxy = 0
         channel = amsu_channel
 
         T0 = t_vals(0)
