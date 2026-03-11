@@ -112,12 +112,12 @@ fortran_src = [nan_src,
 
        
 #create the executeable for vapor
-exe = executable('test_compute_absorption_tables_msu', 
-                  [driver_src,fortran_src],
-                  install      : true, 
-                  dependencies : [
-                     ],
-                  fortran_args : fortran_args)
+# exe = executable('test_compute_absorption_tables_msu', 
+#                   [driver_src,fortran_src],
+#                   install      : true, 
+#                   dependencies : [
+#                      ],
+#                   fortran_args : fortran_args)
 
 py_mod = import('python')
 py = py_mod.find_installation('python3.13')
