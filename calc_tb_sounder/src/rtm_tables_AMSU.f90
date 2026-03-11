@@ -81,6 +81,7 @@ contains
     
         status = nf90_open(trim(file), nf90_nowrite, ncid)
         if (status /= nf90_noerr) then
+            print *, nf90_strerror(status)
             err = status
             return
         endif
