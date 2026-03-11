@@ -157,6 +157,9 @@ contains
         real(8) :: c_h2o
         real(8) :: rho_dry
         real(8) :: rho_vap
+
+        c_air = R_GAS / M_W_AIR
+        c_h2o = R_GAS / M_W_H2O
         
         amsu_num_per_side = amsu_num_freq/2
         center_freq_lower = AMSU_A_Freq(channel) - AMSU_A_BANDWIDTH(channel)/4.0 - AMSU_A_Stopband(channel)/4.0
@@ -243,11 +246,9 @@ contains
         real(4), dimension(msu_num_freq) :: msu_freq_arr
         real(4), dimension(msu_num_freq) :: msu_freq_wt    
 
-        real(4) :: center_freq_lower, center_freq_upper, bandwidth
         real(4) :: T, P, PV, q, freq
         real(4) :: ao, av, total_abs
 
-        
         real(8), parameter :: M_W_air = 2.8966D-2
         real(8), parameter :: M_W_H2O = 1.8015324D-2
         real(8), parameter :: R_GAS = 8.3145112D0
@@ -257,6 +258,9 @@ contains
         real(8) :: c_h2o
         real(8) :: rho_dry
         real(8) :: rho_vap
+
+        c_air = R_GAS / M_W_AIR
+        c_h2o = R_GAS / M_W_H2O
         
         do freq_index = 0,msu_num_freq - 1
             msu_freq_arr(freq_index+1) =                &
