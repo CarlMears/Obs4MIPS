@@ -1,6 +1,6 @@
 module rtm_tables_AMSU
 
-    !use netcdf
+    use netcdf
 
     implicit none
 
@@ -51,6 +51,117 @@ contains
         err = 0
         return
     end subroutine read_abs_table_q_AMSU
+
+    subroutine read_abs_table_q_AMSU_netcdf(amsu_channel,path_to_data,err)
+
+        implicit none
+
+        integer(4),intent(in)                 :: amsu_channel
+        character(len = *), intent(in)        :: path_to_data
+        integer(4),intent(out)                :: err
+        character(len = 200)                  :: file
+        integer(4)                            :: numt,nump,numq
+        integer(4)                            :: ivap,ioxy,channel
+        integer(4)                            :: ncid,varid
+        integer(4)                            :: status
+        integer(4)                            :: t_index,p_index,q_index
+        real(4),dimension(0:num_t)            :: t_vals
+        real(4),dimension(0:num_p)            :: p_vals
+        real(4),dimension(0:num_q)            :: q_vals
+        real(4),dimension(0:num_q,0:num_p,0:num_t) :: abs_table_q_netcdf
+        
+
+        write(file,100) trim(path_to_data),amsu_channel
+100     format(a,'/abs_tables/amsu_',i2.2,'_abs_table_q_per_Pa.nc')
+
+
+    
+        status = nf90_open(trim(file), nf90_nowrite, ncid)
+        if (status /= nf90_noerr) then
+            err = status
+            return
+        endif
+
+        status = nf90_inq_varid(ncid, 'temperature', varid)
+        if (status /= nf90_noerr) then
+            err = status
+            status = nf90_close(ncid)
+            return
+        endif
+        status = nf90_get_var(ncid, varid, t_vals)
+        if (status /= nf90_noerr) then
+            err = status
+            status = nf90_close(ncid)
+            return
+        endif
+
+        status = nf90_inq_varid(ncid, 'pressure', varid)
+        if (status /= nf90_noerr) then
+            err = status
+            status = nf90_close(ncid)
+            return
+        endif
+        status = nf90_get_var(ncid, varid, p_vals)
+        if (status /= nf90_noerr) then
+            err = status
+            status = nf90_close(ncid)
+            return
+        endif
+
+        status = nf90_inq_varid(ncid, 'specific_humidity', varid)
+        if (status /= nf90_noerr) then
+            err = status
+            status = nf90_close(ncid)
+            return
+        endif
+        status = nf90_get_var(ncid, varid, q_vals)
+        if (status /= nf90_noerr) then
+            err = status
+            status = nf90_close(ncid)
+            return
+        endif
+
+        status = nf90_inq_varid(ncid, 'absorptivity', varid)
+        if (status /= nf90_noerr) then
+            err = status
+            status = nf90_close(ncid)
+            return
+        endif
+        status = nf90_get_var(ncid, varid, abs_table_q_netcdf)
+        if (status /= nf90_noerr) then
+            err = status
+            status = nf90_close(ncid)
+            return
+        endif
+
+        status = nf90_close(ncid)
+
+        numt = size(t_vals) - 1
+        nump = size(p_vals) - 1
+        numq = size(q_vals) - 1
+        ivap = 0
+        ioxy = 0
+        channel = amsu_channel
+
+        T0 = t_vals(0)
+        Delta_t = t_vals(1) - t_vals(0)
+        Delta_p = p_vals(1) - p_vals(0)
+        Delta_q = q_vals(1) - q_vals(0)
+
+        ! NetCDF uses (q, p, t); map into (t, p, q)
+        do t_index = 0, num_t
+            do p_index = 0, num_p
+                do q_index = 0, num_q
+                    abs_table_q(t_index,p_index,q_index) = abs_table_q_netcdf(q_index,p_index,t_index)
+                end do
+            end do
+        end do
+        abs_table_q(:,0,:) = 0.0
+
+        amsu_channel_loaded = amsu_channel
+        err = 0
+        return
+    end subroutine read_abs_table_q_AMSU_netcdf
 
     
     subroutine read_cld_abs_table_AMSU(amsu_channel,path_to_data,err)
