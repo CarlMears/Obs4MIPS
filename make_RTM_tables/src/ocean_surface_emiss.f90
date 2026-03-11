@@ -1,5 +1,7 @@
 module ocean_surface_emiss
 
+    use geomod10c, only: fdem0_meissner_wentz
+
     implicit none
 
 contains
@@ -24,7 +26,7 @@ contains
 
         surtep = sst + 273.16
         ! specular emissivity (Fresnel) for v and h
-        call fdem0(freq, tht, sst, em0)
+        call fdem0_meissner_wentz(freq, tht, sst, em0)
 
         ! F term (ATBD: 58)
         ! m1 and m2 as well as the spline point w1 are updated from ATBD using TMI results

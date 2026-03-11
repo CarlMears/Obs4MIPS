@@ -45,7 +45,7 @@ atmos_abs_src = files('src/atmos_abs_routines.f90',
                'src/dielectric_meissner_wentz.f90')
 sat_constants_src = files('src/msu_constants.f90', 'src/amsu_constants.f90')
 table_src = files('src/make_absorption_table_t_q.f90','src/make_ocean_emissivity_table_t_w.f90')
-emiss_src = files('src/ocean_surface_emiss.f90')
+emiss_src = files('src/ocean_surface_emiss.f90', 'src/geomod10/geomod10c.f90')
 driver_src = files('src/compute_absorption_tables_amsu_dsb_driver.f90')
 
 fortran_src = [nan_src,
