@@ -13,7 +13,7 @@ module make_ocean_emissivity_table_t_w
 
 contains
 
-    function cosd(x)
+    pure elemental function cosd(x)
 
         real(4), intent(in) :: x
         real(4) :: cosd
@@ -24,7 +24,7 @@ contains
         cosd = cos(x * DEG2RAD_F32)
     end function cosd
 
-    function sind(x)
+    pure elemental function sind(x)
 
         real(4), intent(in) :: x
         real(4) :: sind
