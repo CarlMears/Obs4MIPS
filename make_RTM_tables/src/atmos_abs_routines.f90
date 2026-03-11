@@ -293,7 +293,7 @@ contains
       zterm=ga*(1.+(freq/ga)**2)
       apterm=1.4e-10*(1-1.2e-5*freq**1.5)*pdry*tht**1.5
       if(apterm.lt.0) apterm=0
-      sftot=pdry*freq*tht**2 * (tht*sum + 6.14e-4/zterm + apterm)
+      sftot=real(pdry*freq*tht**2 * (tht*sum + 6.14e-4/zterm + apterm),real32)
 
       gamoxy=0.1820*freq*sftot
 !x    if(freq.gt.37) gamoxy=gamoxy + 0.1820*43.e-10 *pdry**2*tht**3*(freq-37.)**1.7  !prior to 7/17/2015

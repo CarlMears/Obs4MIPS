@@ -1,5 +1,6 @@
 module make_absorption_table_t_q 
 
+    use, intrinsic :: iso_fortran_env, only: real32,real64
     use nan_support
     use atmos_abs_routines, only: fdabscoeff
     use msu_constants
@@ -106,8 +107,8 @@ contains
                         rho_dry = (P - PV) / (c_air * T)
                         rho_vap = PV / (c_h2o * T)
 
-                        abs_table_per_Pa(T_index, P_index, q_index) = abs_table_per_Pa(T_index, P_index, q_index) + &
-                                                         amsu_freq_wt(freq_index) * total_abs * 0.001 / ((rho_dry + rho_vap) * g)
+                        abs_table_per_Pa(T_index, P_index, q_index) = real(abs_table_per_Pa(T_index, P_index, q_index) + &
+                                                         amsu_freq_wt(freq_index) * total_abs * 0.001 / ((rho_dry + rho_vap) * g), real32)
                     enddo
                 enddo
             enddo
@@ -210,8 +211,8 @@ contains
 
                         rho_dry = (p-pv)/(c_air*T)
                         rho_vap = pv/(c_h2o*T)
-                        abs_table_per_Pa(T_index,P_index,q_index) = abs_table_per_Pa(T_index,P_index,q_index) + &
-                                                                    amsu_freq_wt(freq_index)*total_abs*0.001/((rho_dry + rho_vap) * g)
+                        abs_table_per_Pa(T_index,P_index,q_index) = real(abs_table_per_Pa(T_index,P_index,q_index) + &
+                                                                    amsu_freq_wt(freq_index)*total_abs*0.001/((rho_dry + rho_vap) * g), real32)
                             
                     enddo
                 enddo
@@ -302,8 +303,8 @@ contains
 
                         rho_dry = (p-pv)/(c_air*T)
                         rho_vap = pv/(c_h2o*T)
-                        abs_table_per_Pa(T_index,P_index,q_index) = abs_table_per_Pa(T_index,P_index,q_index) + &
-                                                                    msu_freq_wt(freq_index)*total_abs*0.001/((rho_dry + rho_vap) * g)
+                        abs_table_per_Pa(T_index,P_index,q_index) = real(abs_table_per_Pa(T_index,P_index,q_index) + &
+                                                                    msu_freq_wt(freq_index)*total_abs*0.001/((rho_dry + rho_vap) * g), real32)
                             
                     enddo
                 enddo
