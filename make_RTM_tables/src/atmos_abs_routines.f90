@@ -2,7 +2,7 @@
 module atmos_abs_routines
       
       use dielectric, only: dielectric_meissner_wentz
-
+      use, intrinsic :: iso_fortran_env, only: real32,real64
       implicit none
 
 contains
@@ -428,7 +428,7 @@ contains
       if(sum.lt.0) sum=0
 
 !x    sftot=pwet*freq*tht**3.5*(sum +     1.2957246e-6*pdry/tht**0.5 +                    4.2952193e-5*pwet*tht**4)
-      sftot=pwet*freq*tht**3.5*(sum + 1.1*1.2957246e-6*pdry/tht**0.5 + 0.425*(freq**0.10)*4.2952193e-5*pwet*tht**4) !modification 3
+      sftot=pwet*freq*tht**3.5*(real(sum ,real32)+1.1*1.2957246e-6*pdry/tht**0.5 + 0.425*(freq**0.10)*4.2952193e-5*pwet*tht**4) !modification 3
 
       gamh2o=0.1820*freq*sftot
       return
