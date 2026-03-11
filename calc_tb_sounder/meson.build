@@ -1,4 +1,4 @@
-project('calc_tb_amsu', 'c', 'fortran', version: '0.1.0', default_options: ['warning_level=0','b_vscrt=static_from_buildtype'])
+project('calc_tb_amsu', 'c', 'fortran', version: '0.1.0', default_options: ['buildtype=debug','warning_level=0','b_vscrt=static_from_buildtype'])
 
 fortran_compiler = meson.get_compiler('fortran')
 

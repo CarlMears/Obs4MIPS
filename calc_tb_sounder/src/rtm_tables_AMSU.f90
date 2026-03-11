@@ -74,6 +74,8 @@ contains
 
         write(file,100) trim(path_to_data),amsu_channel,ivap,ioxy
 100     format(a,'/abs_tables/amsu_',i2.2,'_abs_table_q_per_Pa_',i1.1,'.',i1.1,'.nc')
+        print *, "Reading AMSU absorption table from netCDF file: "
+        print *, trim(file)
 
 
     
@@ -83,18 +85,23 @@ contains
             return
         endif
 
+        print *, "Successfully opened netCDF file. Reading variables..."
+
         status = nf90_inq_varid(ncid, 'temperature', varid)
         if (status /= nf90_noerr) then
             err = status
             status = nf90_close(ncid)
             return
         endif
+
+        print *, "Found temperature varid..."
         status = nf90_get_var(ncid, varid, t_vals)
         if (status /= nf90_noerr) then
             err = status
             status = nf90_close(ncid)
             return
         endif
+        print *, "Successfully read temperature variable. Reading pressure variable..."
 
         status = nf90_inq_varid(ncid, 'pressure', varid)
         if (status /= nf90_noerr) then
