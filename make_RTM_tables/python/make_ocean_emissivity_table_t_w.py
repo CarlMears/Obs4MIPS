@@ -200,121 +200,126 @@ if __name__ == "__main__":
     Delta_W = 1.0
     W0 = 0.0
 
-    for msu_channel in range(1, 5):
-        print(f"Computing ocean emissivity table for MSU channel {msu_channel}...")
-        emiss_table = compute_ocean_emissivity_tables_msu(msu_channel,
-                                                    num_T,
-                                                    num_W, 
-                                                    T0, 
-                                                    Delta_T,
-                                                    W0, Delta_W)
-        num_views = emiss_table.shape[2]
-        ds = xr.Dataset(
-            data_vars={
-                'emissivity': (('temperature', 'wind_speed', 'fov'), emiss_table)
-            },
-            coords={
-                'temperature': T0 + Delta_T*np.arange(num_T+1),
-                'wind_speed': W0 + Delta_W*np.arange(num_W+1),
-                'fov': np.arange(num_views)
-            }
-        )
+    do_MSU = False
+    do_AMSU = True
 
-        ds['emissivity'].attrs.update({
-            'standard_name': 'surface_emissivity',
-            'long_name': 'Surface emissivity',
-            'units': '1',
-            'valid_min': 0.0,
-            'valid_max': 1.0,
-            'description': f'MSU channel {msu_channel} ocean surface emissivity as a function of sea surface temperature and wind speed',
-        })
+    if do_MSU:
+        for msu_channel in range(1, 5):
+            print(f"Computing ocean emissivity table for MSU channel {msu_channel}...")
+            emiss_table = compute_ocean_emissivity_tables_msu(msu_channel,
+                                                        num_T,
+                                                        num_W, 
+                                                        T0, 
+                                                        Delta_T,
+                                                        W0, Delta_W)
+            num_views = emiss_table.shape[2]
+            ds = xr.Dataset(
+                data_vars={
+                    'emissivity': (('temperature', 'wind_speed', 'fov'), emiss_table)
+                },
+                coords={
+                    'temperature': T0 + Delta_T*np.arange(num_T+1),
+                    'wind_speed': W0 + Delta_W*np.arange(num_W+1),
+                    'fov': np.arange(num_views)
+                }
+            )
 
-        ds['temperature'].attrs.update({
-            'standard_name': 'sea_surface_temperature',
-            'long_name': 'Sea surface temperature',
-            'units': 'K',
-            'valid_min': float(T0),
-            'valid_max': float(T0 + Delta_T * num_T)
-        })
-        ds['wind_speed'].attrs.update({
-            'standard_name': 'wind_speed',
-            'long_name': 'Surface wind speed',
-            'units': 'm s-1',
-            'valid_min': float(W0),
-            'valid_max': float(W0 + Delta_W * num_W)
-        })
-        ds['fov'].attrs.update({
-            'long_name': 'Field of view index',
-            'units': '1',
-            'valid_min': 0,
-            'valid_max': num_views - 1
-        })
+            ds['emissivity'].attrs.update({
+                'standard_name': 'surface_emissivity',
+                'long_name': 'Surface emissivity',
+                'units': '1',
+                'valid_min': 0.0,
+                'valid_max': 1.0,
+                'description': f'MSU channel {msu_channel} ocean surface emissivity as a function of sea surface temperature and wind speed',
+            })
 
-        output_path = Path('./make_RTM_tables/data/ocean_emiss_tables/')
-        nc_filename  = f'ocean_emissivity_table_MSU_channel_{msu_channel:02d}.nc'
-        ds.to_netcdf(output_path / nc_filename)
+            ds['temperature'].attrs.update({
+                'standard_name': 'sea_surface_temperature',
+                'long_name': 'Sea surface temperature',
+                'units': 'K',
+                'valid_min': float(T0),
+                'valid_max': float(T0 + Delta_T * num_T)
+            })
+            ds['wind_speed'].attrs.update({
+                'standard_name': 'wind_speed',
+                'long_name': 'Surface wind speed',
+                'units': 'm s-1',
+                'valid_min': float(W0),
+                'valid_max': float(W0 + Delta_W * num_W)
+            })
+            ds['fov'].attrs.update({
+                'long_name': 'Field of view index',
+                'units': '1',
+                'valid_min': 0,
+                'valid_max': num_views - 1
+            })
 
-        print('Emissivity table saved to: ', output_path / nc_filename)
-        print() 
+            output_path = Path('./make_RTM_tables/data/ocean_emiss_tables/')
+            nc_filename  = f'ocean_emissivity_table_MSU_channel_{msu_channel:02d}.nc'
+            ds.to_netcdf(output_path / nc_filename)
 
-    for channel in range(1, 11):
-        print(f"Computing ocean emissivity table for AMSU channel {channel}...")
-        emiss_table = compute_ocean_emissivity_tables_amsu(channel,
-                                                    num_T,
-                                                    num_W, 
-                                                    T0, 
-                                                    Delta_T,
-                                                    W0, Delta_W)
+            print('Emissivity table saved to: ', output_path / nc_filename)
+            print() 
+
+    if do_AMSU:
+        for channel in range(1, 11):
+            print(f"Computing ocean emissivity table for AMSU channel {channel}...")
+            emiss_table = compute_ocean_emissivity_tables_amsu(channel,
+                                                        num_T,
+                                                        num_W, 
+                                                        T0, 
+                                                        Delta_T,
+                                                        W0, Delta_W)
+            
+
+            ds = xr.Dataset(
+                data_vars={
+                    'emissivity': (('temperature', 'wind_speed', 'fov'), emiss_table)
+                },
+                coords={
+                    'temperature': T0 + Delta_T*np.arange(num_T+1),
+                    'wind_speed': W0 + Delta_W*np.arange(num_W+1),
+                    'fov': np.arange(15)
+                }
+            )
+
+            ds['emissivity'].attrs.update({
+                'standard_name': 'surface_emissivity',
+                'long_name': 'Surface emissivity',
+                'units': '1',
+                'valid_min': 0.0,
+                'valid_max': 1.0,
+                'description': f'AMSU channel {channel} ocean surface emissivity as a function of sea surface temperature and wind speed',
+            })
+
+            ds['temperature'].attrs.update({
+                'standard_name': 'sea_surface_temperature',
+                'long_name': 'Sea surface temperature',
+                'units': 'K',
+                'valid_min': float(T0),
+                'valid_max': float(T0 + Delta_T * num_T)
+            })
+            ds['wind_speed'].attrs.update({
+                'standard_name': 'wind_speed',
+                'long_name': 'Surface wind speed',
+                'units': 'm s-1',
+                'valid_min': float(W0),
+                'valid_max': float(W0 + Delta_W * num_W)
+            })
+            ds['fov'].attrs.update({
+                'long_name': 'Field of view index',
+                'units': '1',
+                'valid_min': 0,
+                'valid_max': 14
+            })
+
+            output_path = Path('./make_RTM_tables/data/ocean_emiss_tables/')
+            nc_filename  = f'ocean_emissivity_table_AMSU_channel_{channel:02d}.nc'
+            ds.to_netcdf(output_path / nc_filename)
+
+            print('Emissivity table saved to: ', output_path / nc_filename)
+            print()
+
         
-
-        ds = xr.Dataset(
-            data_vars={
-                'emissivity': (('temperature', 'wind_speed', 'fov'), emiss_table)
-            },
-            coords={
-                'temperature': T0 + Delta_T*np.arange(num_T+1),
-                'wind_speed': W0 + Delta_W*np.arange(num_W+1),
-                'fov': np.arange(15)
-            }
-        )
-
-        ds['emissivity'].attrs.update({
-            'standard_name': 'surface_emissivity',
-            'long_name': 'Surface emissivity',
-            'units': '1',
-            'valid_min': 0.0,
-            'valid_max': 1.0,
-            'description': f'AMSU channel {channel} ocean surface emissivity as a function of sea surface temperature and wind speed',
-        })
-
-        ds['temperature'].attrs.update({
-            'standard_name': 'sea_surface_temperature',
-            'long_name': 'Sea surface temperature',
-            'units': 'K',
-            'valid_min': float(T0),
-            'valid_max': float(T0 + Delta_T * num_T)
-        })
-        ds['wind_speed'].attrs.update({
-            'standard_name': 'wind_speed',
-            'long_name': 'Surface wind speed',
-            'units': 'm s-1',
-            'valid_min': float(W0),
-            'valid_max': float(W0 + Delta_W * num_W)
-        })
-        ds['fov'].attrs.update({
-            'long_name': 'Field of view index',
-            'units': '1',
-            'valid_min': 0,
-            'valid_max': 14
-        })
-
-        output_path = Path('./make_RTM_tables/data/ocean_emiss_tables/')
-        nc_filename  = f'ocean_emissivity_table_AMSU_channel_{channel:02d}.nc'
-        ds.to_netcdf(output_path / nc_filename)
-
-        print('Emissivity table saved to: ', output_path / nc_filename)
-        print()
-
-     
 
 
