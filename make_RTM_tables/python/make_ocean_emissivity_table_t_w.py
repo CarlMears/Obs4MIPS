@@ -200,7 +200,7 @@ if __name__ == "__main__":
     Delta_W = 1.0
     W0 = 0.0
 
-    do_MSU = False
+    do_MSU = True
     do_AMSU = True
 
     if do_MSU:
@@ -213,6 +213,7 @@ if __name__ == "__main__":
                                                         Delta_T,
                                                         W0, Delta_W)
             num_views = emiss_table.shape[2]
+            emiss_table = emiss_table.astype(np.float32)
             ds = xr.Dataset(
                 data_vars={
                     'emissivity': (('temperature', 'wind_speed', 'fov'), emiss_table)
@@ -270,8 +271,8 @@ if __name__ == "__main__":
                                                         T0, 
                                                         Delta_T,
                                                         W0, Delta_W)
-            
-
+            num_views = emiss_table.shape[2]
+            emiss_table = emiss_table.astype(np.float32)
             ds = xr.Dataset(
                 data_vars={
                     'emissivity': (('temperature', 'wind_speed', 'fov'), emiss_table)
@@ -279,7 +280,7 @@ if __name__ == "__main__":
                 coords={
                     'temperature': T0 + Delta_T*np.arange(num_T+1),
                     'wind_speed': W0 + Delta_W*np.arange(num_W+1),
-                    'fov': np.arange(15)
+                    'fov': np.arange(num_views)
                 }
             )
 
@@ -310,7 +311,7 @@ if __name__ == "__main__":
                 'long_name': 'Field of view index',
                 'units': '1',
                 'valid_min': 0,
-                'valid_max': 14
+                'valid_max': num_views - 1
             })
 
             output_path = Path('./make_RTM_tables/data/ocean_emiss_tables/')
