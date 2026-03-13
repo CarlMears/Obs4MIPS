@@ -232,6 +232,118 @@ contains
         return
 
     end subroutine read_ocean_emiss_table_AMSU
+
+    subroutine read_ocean_emiss_table_AMSU_netcdf(amsu_channel,path_to_data,err)
+
+        implicit none
+
+        integer(4),intent(in)                 :: amsu_channel
+        character(len = *), intent(in)        :: path_to_data
+        integer(4),intent(out)                :: err
+        character(len = 200)                  :: file
+        integer(4)                            :: channel
+        integer(4)                            :: ncid,varid
+        integer(4)                            :: status
+        integer(4)                            :: t_index,w_index,fov_index
+        real(4),dimension(0:num_t)            :: t_vals
+        real(4),dimension(0:num_w)            :: w_vals
+        real(4),dimension(0:num_fov-1)        :: fov_vals
+        real(4),dimension(0:num_t,0:num_w,0:num_fov-1) :: ocean_emiss_netcdf
+
+        write(file,100) trim(path_to_data),amsu_channel
+100     format(a,'/ocean_emiss_tables/ocean_emissivity_table_AMSU_channel_',i2.2,'.nc')
+        print *, "Reading AMSU ocean emissivity table from netCDF file: "
+        print *, trim(file)
+
+        status = nf90_open(trim(file), nf90_nowrite, ncid)
+        if (status /= nf90_noerr) then
+            print *, nf90_strerror(status)
+            err = status
+            return
+        endif
+
+        status = nf90_inq_varid(ncid, 'temperature', varid)
+        if (status /= nf90_noerr) then
+            err = status
+            print *, nf90_strerror(status)
+            status = nf90_close(ncid)
+            return
+        endif
+        status = nf90_get_var(ncid, varid, t_vals)
+        if (status /= nf90_noerr) then
+            err = status
+            print *, nf90_strerror(status)
+            status = nf90_close(ncid)
+            return
+        endif
+
+        status = nf90_inq_varid(ncid, 'wind_speed', varid)
+        if (status /= nf90_noerr) then
+            err = status
+            print *, nf90_strerror(status)
+            status = nf90_close(ncid)
+            return
+        endif
+        status = nf90_get_var(ncid, varid, w_vals)
+        if (status /= nf90_noerr) then
+            err = status
+            print *, nf90_strerror(status)
+            status = nf90_close(ncid)
+            return
+        endif
+
+        status = nf90_inq_varid(ncid, 'fov', varid)
+        if (status /= nf90_noerr) then
+            err = status
+            print *, nf90_strerror(status)
+            status = nf90_close(ncid)
+            return
+        endif
+        status = nf90_get_var(ncid, varid, fov_vals)
+        if (status /= nf90_noerr) then
+            err = status
+            print *, nf90_strerror(status)
+            status = nf90_close(ncid)
+            return
+        endif
+
+        status = nf90_inq_varid(ncid, 'emissivity', varid)
+        if (status /= nf90_noerr) then
+            err = status
+            print *, nf90_strerror(status)
+            status = nf90_close(ncid)
+            return
+        endif
+        status = nf90_get_var(ncid, varid, ocean_emiss_netcdf)
+        if (status /= nf90_noerr) then
+            err = status
+            print *, nf90_strerror(status)
+            status = nf90_close(ncid)
+            return
+        endif
+
+        status = nf90_close(ncid)
+
+        channel = amsu_channel
+        T0 = t_vals(0)
+        Delta_t = t_vals(1) - t_vals(0)
+        W0 = w_vals(0)
+        Delta_w = w_vals(1) - w_vals(0)
+
+        ! NetCDF uses (temperature, wind_speed, fov); map fov index 0..14 -> 1..15
+        do t_index = 0, num_t
+            do w_index = 0, num_w
+                do fov_index = 0, num_fov-1
+                    ocean_emiss_table(t_index,w_index,fov_index+1) = ocean_emiss_netcdf(t_index,w_index,fov_index)
+                end do
+            end do
+        end do
+
+        amsu_channel_loaded_emiss = amsu_channel
+        err = 0
+        return
+
+    end subroutine read_ocean_emiss_table_AMSU_netcdf
     
     subroutine read_sea_ice_emiss_table_AMSU(amsu_channel,path_to_data,err)
 
