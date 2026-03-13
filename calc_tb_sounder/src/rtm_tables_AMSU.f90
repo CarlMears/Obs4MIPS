@@ -261,7 +261,7 @@ contains
             err = status
             return
         endif
-
+        print *, "Successfully opened netCDF file. Reading variables..."
         status = nf90_inq_varid(ncid, 'temperature', varid)
         if (status /= nf90_noerr) then
             err = status
@@ -269,6 +269,7 @@ contains
             status = nf90_close(ncid)
             return
         endif
+        print *, "Successfully found temperature variable."
         status = nf90_get_var(ncid, varid, t_vals)
         if (status /= nf90_noerr) then
             err = status
@@ -276,7 +277,7 @@ contains
             status = nf90_close(ncid)
             return
         endif
-
+        print *, "Successfully read temperature variable. Looking for wind speed variable..."
         status = nf90_inq_varid(ncid, 'wind_speed', varid)
         if (status /= nf90_noerr) then
             err = status
@@ -284,6 +285,7 @@ contains
             status = nf90_close(ncid)
             return
         endif
+        print *, "Successfully found wind speed variable."
         status = nf90_get_var(ncid, varid, w_vals)
         if (status /= nf90_noerr) then
             err = status
@@ -291,7 +293,8 @@ contains
             status = nf90_close(ncid)
             return
         endif
-
+        print *, "Successfully read wind speed variable. Looking for fov variable..."
+         status = nf90_inq_varid(ncid, 'fov', varid)
         status = nf90_inq_varid(ncid, 'fov', varid)
         if (status /= nf90_noerr) then
             err = status
@@ -299,6 +302,7 @@ contains
             status = nf90_close(ncid)
             return
         endif
+        print *, "Successfully found fov variable."
         status = nf90_get_var(ncid, varid, fov_vals)
         if (status /= nf90_noerr) then
             err = status
@@ -306,7 +310,8 @@ contains
             status = nf90_close(ncid)
             return
         endif
-
+        print *, "Successfully read fov variable. Looking for emissivity variable..."
+        
         status = nf90_inq_varid(ncid, 'emissivity', varid)
         if (status /= nf90_noerr) then
             err = status
@@ -314,6 +319,7 @@ contains
             status = nf90_close(ncid)
             return
         endif
+        print *, "Successfully found emissivity variable."
         status = nf90_get_var(ncid, varid, ocean_emiss_netcdf)
         if (status /= nf90_noerr) then
             err = status
@@ -321,7 +327,7 @@ contains
             status = nf90_close(ncid)
             return
         endif
-
+        print *, "Successfully read emissivity variable. Closing netCDF file."
         status = nf90_close(ncid)
 
         channel = amsu_channel
