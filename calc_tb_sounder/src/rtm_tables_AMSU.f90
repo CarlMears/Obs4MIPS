@@ -7,7 +7,7 @@ module rtm_tables_AMSU
     integer(4),parameter,private            :: num_t = 200
     integer(4),parameter,private            :: num_p = 110
     integer(4),parameter,private            :: num_q = 150
-    integer(4),parameter,private            :: num_w = 30
+    integer(4),parameter,private            :: num_w = 31
     integer(4),parameter,private            :: num_fov = 15
 
     real(4),dimension(0:num_t,0:num_p,0:num_q)    :: abs_table_q
