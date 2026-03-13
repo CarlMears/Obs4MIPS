@@ -320,6 +320,9 @@ contains
             return
         endif
         print *, "Successfully found emissivity variable."
+        print *, "Num T = ", size(t_vals),num_t
+        print *, "Num W = ", size(w_vals),num_w
+        print *, "Num fov = ", size(fov_vals),num_fov
         status = nf90_get_var(ncid, varid, ocean_emiss_netcdf)
         if (status /= nf90_noerr) then
             err = status
