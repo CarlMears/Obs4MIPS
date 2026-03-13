@@ -248,7 +248,8 @@ contains
         real(4),dimension(0:num_t)            :: t_vals
         real(4),dimension(0:num_w)            :: w_vals
         real(4),dimension(0:num_fov-1)        :: fov_vals
-        real(4),dimension(0:num_t,0:num_w,0:num_fov-1) :: ocean_emiss_netcdf
+        !real(4),dimension(0:num_t,0:num_w,0:num_fov-1) :: ocean_emiss_netcdf
+        real(4),dimension(0:num_fov-1,0:num_w,0:num_t) :: ocean_emiss_netcdf
 
         write(file,100) trim(path_to_data),amsu_channel
 100     format(a,'/ocean_emiss_tables/ocean_emissivity_table_AMSU_channel_',i2.2,'.nc')
@@ -343,7 +344,7 @@ contains
         do t_index = 0, num_t
             do w_index = 0, num_w
                 do fov_index = 0, num_fov-1
-                    ocean_emiss_table(t_index,w_index,fov_index+1) = ocean_emiss_netcdf(t_index,w_index,fov_index)
+                    ocean_emiss_table(t_index,w_index,fov_index+1) = ocean_emiss_netcdf(fov_index,w_index,t_index)
                 end do
             end do
         end do
