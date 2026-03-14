@@ -209,6 +209,73 @@ contains
         return
     end subroutine read_cld_abs_table_AMSU
 
+    subroutine read_cld_abs_table_AMSU_netcdf(amsu_channel,path_to_data,err)
+
+        implicit none
+
+        integer(4),intent(in)                 :: amsu_channel
+        character(len = *), intent(in)        :: path_to_data
+        integer(4),intent(out)                :: err
+
+        character(len = 200)                  :: file
+        integer(4)                            :: ncid,varid
+        integer(4)                            :: status
+        real(4),dimension(0:num_t)            :: t_vals
+
+        write(file,100) trim(path_to_data),amsu_channel
+100     format(a,'/abs_tables/amsu_',i2.2,'_cld_abs_table.nc')
+
+        print *, "Reading AMSU cloud absorption table from netCDF file: "
+        print *, trim(file)
+
+        status = nf90_open(trim(file), nf90_nowrite, ncid)
+        if (status /= nf90_noerr) then
+            print *, nf90_strerror(status)
+            err = status
+            return
+        endif
+
+        status = nf90_inq_varid(ncid, 'temperature', varid)
+        if (status /= nf90_noerr) then
+            err = status
+            print *, nf90_strerror(status)
+            status = nf90_close(ncid)
+            return
+        endif
+        status = nf90_get_var(ncid, varid, t_vals)
+        if (status /= nf90_noerr) then
+            err = status
+            print *, nf90_strerror(status)
+            status = nf90_close(ncid)
+            return
+        endif
+
+        status = nf90_inq_varid(ncid, 'absorptivity', varid)
+        if (status /= nf90_noerr) then
+            err = status
+            print *, nf90_strerror(status)
+            status = nf90_close(ncid)
+            return
+        endif
+        status = nf90_get_var(ncid, varid, cld_abs_table)
+        if (status /= nf90_noerr) then
+            err = status
+            print *, nf90_strerror(status)
+            status = nf90_close(ncid)
+            return
+        endif
+
+        status = nf90_close(ncid)
+
+        T0 = t_vals(0)
+        Delta_t = t_vals(1) - t_vals(0)
+
+        amsu_channel_loaded_cloud = amsu_channel
+        err = 0
+        return
+
+    end subroutine read_cld_abs_table_AMSU_netcdf
+
     subroutine read_ocean_emiss_table_AMSU(amsu_channel,path_to_data,err)
 
         implicit none
