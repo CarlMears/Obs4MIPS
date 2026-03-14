@@ -459,7 +459,7 @@ contains
         integer(4)                            :: t_index,fov_index
         real(4),dimension(0:num_t)            :: t_vals
         real(4),dimension(0:num_fov-1)        :: fov_vals
-        real(4),dimension(0:num_fov-1,0:num_t) :: sea_ice_emiss_netcdf
+        real(4),dimension(0:num_t,0:num_fov-1) :: sea_ice_emiss_netcdf
 
         write(file,100) trim(path_to_data),amsu_channel
 100     format(a,'/emiss_tables/amsu_',i2.2,'_emiss_table_sea_ice.nc')
@@ -531,7 +531,7 @@ contains
         ! NetCDF uses (fov, temperature); map fov index 0..14 -> 1..15
         do t_index = 0, num_t
             do fov_index = 0, num_fov-1
-                sea_ice_emiss_table(t_index,fov_index+1) = sea_ice_emiss_netcdf(fov_index,t_index)
+                sea_ice_emiss_table(t_index,fov_index+1) = sea_ice_emiss_netcdf(t_index,fov_index)
             end do
         end do
 
