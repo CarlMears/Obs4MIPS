@@ -76,24 +76,24 @@ py.extension_module('calc_tb_amsu',
   subdir : 'calc_tb_amsu',
 )
 
-py.install_sources('data/abs_tables/amsu_05_abs_table_q_per_Pa.dat', subdir : 'calc_tb_amsu/data/abs_tables')
-py.install_sources('data/abs_tables/amsu_05_cld_abs_table.dat', subdir : 'calc_tb_amsu/data/abs_tables')
-py.install_sources('data/emiss_tables/amsu_05_emiss_table_sea_ice.dat', subdir : 'calc_tb_amsu/data/emiss_tables')
-py.install_sources('data/emiss_tables/amsu_05_emiss_table_W.dat', subdir : 'calc_tb_amsu/data/emiss_tables')
+# py.install_sources('data/abs_tables/amsu_05_abs_table_q_per_Pa.dat', subdir : 'calc_tb_amsu/data/abs_tables')
+# py.install_sources('data/abs_tables/amsu_05_cld_abs_table.dat', subdir : 'calc_tb_amsu/data/abs_tables')
+# py.install_sources('data/emiss_tables/amsu_05_emiss_table_sea_ice.dat', subdir : 'calc_tb_amsu/data/emiss_tables')
+# py.install_sources('data/emiss_tables/amsu_05_emiss_table_W.dat', subdir : 'calc_tb_amsu/data/emiss_tables')
 
 py.install_sources('data/abs_tables/amsu_05_abs_table_per_Pa_q.4.4.nc', subdir : 'calc_tb_amsu/data/abs_tables')
 py.install_sources('data/abs_tables/amsu_05_abs_table_per_Pa_q.4.5.nc', subdir : 'calc_tb_amsu/data/abs_tables')
 
 
-py.install_sources('data/abs_tables/amsu_07_abs_table_q_per_Pa.dat', subdir : 'calc_tb_amsu/data/abs_tables')
-py.install_sources('data/abs_tables/amsu_07_cld_abs_table.dat', subdir : 'calc_tb_amsu/data/abs_tables')
-py.install_sources('data/emiss_tables/amsu_07_emiss_table_sea_ice.dat', subdir : 'calc_tb_amsu/data/emiss_tables')
-py.install_sources('data/emiss_tables/amsu_07_emiss_table_W.dat', subdir : 'calc_tb_amsu/data/emiss_tables')
+# py.install_sources('data/abs_tables/amsu_07_abs_table_q_per_Pa.dat', subdir : 'calc_tb_amsu/data/abs_tables')
+# py.install_sources('data/abs_tables/amsu_07_cld_abs_table.dat', subdir : 'calc_tb_amsu/data/abs_tables')
+# py.install_sources('data/emiss_tables/amsu_07_emiss_table_sea_ice.dat', subdir : 'calc_tb_amsu/data/emiss_tables')
+# py.install_sources('data/emiss_tables/amsu_07_emiss_table_W.dat', subdir : 'calc_tb_amsu/data/emiss_tables')
 
-py.install_sources('data/abs_tables/amsu_09_abs_table_q_per_Pa.dat', subdir : 'calc_tb_amsu/data/abs_tables')
-py.install_sources('data/abs_tables/amsu_09_cld_abs_table.dat', subdir : 'calc_tb_amsu/data/abs_tables')
-py.install_sources('data/emiss_tables/amsu_09_emiss_table_sea_ice.dat', subdir : 'calc_tb_amsu/data/emiss_tables')
-py.install_sources('data/emiss_tables/amsu_09_emiss_table_W.dat', subdir : 'calc_tb_amsu/data/emiss_tables')
+# py.install_sources('data/abs_tables/amsu_09_abs_table_q_per_Pa.dat', subdir : 'calc_tb_amsu/data/abs_tables')
+# py.install_sources('data/abs_tables/amsu_09_cld_abs_table.dat', subdir : 'calc_tb_amsu/data/abs_tables')
+# py.install_sources('data/emiss_tables/amsu_09_emiss_table_sea_ice.dat', subdir : 'calc_tb_amsu/data/emiss_tables')
+# py.install_sources('data/emiss_tables/amsu_09_emiss_table_W.dat', subdir : 'calc_tb_amsu/data/emiss_tables')
 
 py.install_sources('data/ocean_emiss_tables/ocean_emissivity_table_AMSU_channel_05.nc', subdir : 'calc_tb_amsu/data/ocean_emiss_tables')
 py.install_sources('data/ocean_emiss_tables/ocean_emissivity_table_AMSU_channel_07.nc', subdir : 'calc_tb_amsu/data/ocean_emiss_tables')
