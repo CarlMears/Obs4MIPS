@@ -488,7 +488,8 @@ contains
             status = nf90_close(ncid)
             return
         endif
-
+        print *, "Successfully read temperature variable. Looking for fov variable..."
+        print *, "Num T = ", size(t_vals),num_t
         status = nf90_inq_varid(ncid, 'fov', varid)
         if (status /= nf90_noerr) then
             err = status
@@ -503,6 +504,7 @@ contains
             status = nf90_close(ncid)
             return
         endif
+        print *,fov_vals
 
         status = nf90_inq_varid(ncid, 'emissivity', varid)
         if (status /= nf90_noerr) then
@@ -511,6 +513,7 @@ contains
             status = nf90_close(ncid)
             return
         endif
+        print *, "Successfully found emissivity variable."
         status = nf90_get_var(ncid, varid, sea_ice_emiss_netcdf)
         if (status /= nf90_noerr) then
             err = status
@@ -518,6 +521,7 @@ contains
             status = nf90_close(ncid)
             return
         endif
+        print *, "Successfully read emissivity variable. Closing netCDF file."
 
         status = nf90_close(ncid)
 
