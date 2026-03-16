@@ -168,7 +168,7 @@ class AMSUForwardOperatorTable:
         else:
             return arr
         
-    def flatten_3d_to_2d(self, arr: np.ndarray) -> np.ndarray:
+    def _flatten_3d_to_2d(self, arr: np.ndarray) -> np.ndarray:
         original_shape = arr.shape
         if arr.ndim == 3:
             return arr.reshape(-1, arr.shape[2]), original_shape
