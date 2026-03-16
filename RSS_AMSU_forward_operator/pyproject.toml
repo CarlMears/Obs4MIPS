@@ -14,7 +14,7 @@ authors = [
 ]
 dependencies = [
     "numpy>=1.26.0",
-    "calc_tb_amsu"
+    "Calc_Tb_AMSU"
 ]
 
 [project.optional-dependencies]
