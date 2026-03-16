@@ -78,7 +78,7 @@ class AMSUForwardOperatorTable:
         num_levels_value = int(num_levels)
         num_views_value = int(num_views)
 
-        t,original_shape_t = self.flatten_3d_to_2d(self.strip_first_dims(t))
+        t,original_shape_t = self._flatten_3d_to_2d(self._strip_first_dims(t))
         if need_flip:
             t = np.flip(t, axis=0)
         t = np.transpose(t)  # transpose to match Fortran column-major order
@@ -89,11 +89,11 @@ class AMSUForwardOperatorTable:
         except AssertionError:
             raise RuntimeError("Pressure profile is not strictly increasing.")
         
-        q,_ = self.flatten_3d_to_2d(self.strip_first_dims(q))
+        q,_ = self._flatten_3d_to_2d(self._strip_first_dims(q))
         if need_flip:
             q = np.flip(q, axis=0)
         q = np.transpose(q)  # transpose to match Fortran column-major order
-        cld,_ = self.flatten_3d_to_2d(self.strip_first_dims(cld))
+        cld,_ = self._flatten_3d_to_2d(self._strip_first_dims(cld))
         if need_flip:
             cld = np.flip(cld, axis=0)
         cld = np.transpose(cld)  # transpose to match Fortran column-major order
@@ -107,11 +107,11 @@ class AMSUForwardOperatorTable:
         except AssertionError:
             raise RuntimeError(f"Number of profiles in t/q/cld do not match (t:{t.shape[1]}, p:{p.shape[1]}, q:{q.shape[1]}, cld:{cld.shape[1]}).")
         
-        t_surf,_ = self.flatten_2d_to_1d(self.strip_first_dims(surf_t))
-        p_surf,_ = self.flatten_2d_to_1d(self.strip_first_dims(surf_p))
-        q_surf,_ = self.flatten_2d_to_1d(self.strip_first_dims(surf_q))
-        cld_surf,_ = self.flatten_2d_to_1d(self.strip_first_dims(surf_cld))
-        wind,_ = self.flatten_2d_to_1d(self.strip_first_dims(wind))
+        t_surf,_ = self._flatten_2d_to_1d(self._strip_first_dims(surf_t))
+        p_surf,_ = self._flatten_2d_to_1d(self._strip_first_dims(surf_p))
+        q_surf,_ = self._flatten_2d_to_1d(self._strip_first_dims(surf_q))
+        cld_surf,_ = self._flatten_2d_to_1d(self._strip_first_dims(surf_cld))
+        wind,_ = self._flatten_2d_to_1d(self._strip_first_dims(wind))
         
         t = np.asfortranarray(t.astype(np.float32))
         p = np.asfortranarray(p.astype(np.float32))
@@ -161,7 +161,7 @@ class AMSUForwardOperatorTable:
 
         return emissivity, surf_wt, space_wt, tb, tb_up, tb_dw, tau, int(err)
     
-    def strip_first_dims(self, arr: np.ndarray) -> np.ndarray:
+    def _strip_first_dims(self, arr: np.ndarray) -> np.ndarray:
         
         if arr.shape[0] == 1:
             return arr[0]
@@ -175,14 +175,14 @@ class AMSUForwardOperatorTable:
         else:
             return arr,original_shape
         
-    def flatten_2d_to_1d(self, arr: np.ndarray) -> np.ndarray:
+    def _flatten_2d_to_1d(self, arr: np.ndarray) -> np.ndarray:
         original_shape = arr.shape
         if arr.ndim == 2:
             return arr.flatten(),original_shape
         else:
             return arr,original_shape
         
-    def dewpoint_to_specific_humidity(self, td_k, p_hpa):
+    def _dewpoint_to_specific_humidity(self, td_k, p_hpa):
         """
         Converts dew point (K) and pressure (hPa) to specific humidity (kg/kg).
         
@@ -211,7 +211,7 @@ class AMSUForwardOperatorTable:
         if self.AMSU_channel not in [5, 7, 9]:
             raise ValueError(f"Unsupported AMSU channel: {self.AMSU_channel}. Supported channels are 5, 7, and 9.")
         
-        surf_q = self.dewpoint_to_specific_humidity(model_data['surface_dewpoint'], model_data['surface_pressure'])
+        surf_q = self._dewpoint_to_specific_humidity(model_data['surface_dewpoint'], model_data['surface_pressure'])
         
         emissivity, surf_wt, space_wt, tb, tb_up, tb_dw, tau, err = self.calc_vs_fov(
             t=model_data['temperature'],
