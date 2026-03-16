@@ -5,14 +5,24 @@ import numpy as np
 import xarray as xr
 from pathlib import Path
 # for graphical debugging
-from rss_plotting.global_map import plot_global_map
+try:
+    from rss_plotting.global_map import plot_global_map
+    do_global_map = True
+except ImportError:
+    print("rss_plotting module not found. Fancy Global map plotting will be unavailable.")
+    print("The RSS plotting module is available here: https://github.com/CarlMears/RSS_plotting")
+    do_global_map = False
 import matplotlib.pyplot as plt
 
-# This not needed, but a lot problems can arise if the wrong Python environment is being used,
+# This not strictlyneeded, but a lot problems can arise if the wrong Python environment is being used,
 # so this is just a sanity check to print the Python executable being used.
 import sys
+print()
+print('------------------------------------------')
 print("Python executable being used: ")
 print(sys.executable)
+print()
+print('------------------------------------------')
 print()
 
 if __name__ == "__main__":
@@ -41,6 +51,51 @@ if __name__ == "__main__":
                                                              # For AMSU Channel 9, we compute TLS.
     print(f"Channels present in output: {channels_present}")
     for channel, tb in brightness_temperatures.items():
-        plot_global_map(tb,vmin=200.0,vmax=300.0, plt_colorbar=True, title=f'{channel} TB', cmap='viridis')
+        if do_global_map:
+            plot_global_map(tb,vmin=220.0,vmax=285.0, plt_colorbar=True, 
+                            title=f'{channel} TB', cmap='viridis')
+        else:
+            plt.figure(figsize=(12,6))
+            plt.imshow(tb, vmin=200.0, vmax=300.0, cmap='viridis')
+            plt.colorbar(label='Brightness Temperature (K)')
+            plt.title(f'{channel} TB')
+            plt.xlabel('Longitude Index')
+            plt.ylabel('Latitude Index')
+
+    # intialize the AMSU forward operator for choosen channel
+    OxygenAbs_index = 4
+    amsu_op = AMSUForwardOperatorTable(AMSU_channel=5,OxygenAbs_index=OxygenAbs_index)
+
+    #compute the brightness temperatures for the specified month and year
+    brightness_temperatures_4 = amsu_op.compute_tbs(model_data)
+
+    channels_present = list(brightness_temperatures_4.keys())  # For AMSU Channel 5, we compute TLT and TMT. 
+                                                               # For AMSU Channel 7, we compute TTS. 
+                                                               # For AMSU Channel 9, we compute TLS.
+    print(f"Channels present in output: {channels_present}")
+    for channel, tb in brightness_temperatures_4.items():
+        if do_global_map:
+            plot_global_map(tb,vmin=220.0,vmax=285.0, plt_colorbar=True, 
+                            title=f'{channel} TB', cmap='viridis')
+        else:
+            plt.figure(figsize=(12,6))
+            plt.imshow(tb, vmin=200.0, vmax=300.0, cmap='viridis')
+            plt.colorbar(label='Brightness Temperature (K)')
+            plt.title(f'{channel} TB')
+            plt.xlabel('Longitude Index')
+            plt.ylabel('Latitude Index')
+
+
+    diff_tmt = brightness_temperatures['tbs_TMT'] - brightness_temperatures_4['tbs_TMT']
+    if do_global_map:
+        plot_global_map(diff_tmt,vmin=-0.5,vmax=0.5, plt_colorbar=True, 
+                        title=f'TMT TB Difference (OxygenAbs_index=5 - OxygenAbs_index=4)', cmap='bwr')
+    else:
+        plt.figure(figsize=(12,6))
+        plt.imshow(diff_tmt, vmin=-0.5, vmax=0.5, cmap='bwr')
+        plt.colorbar(label='Brightness Temperature Difference (K)')
+        plt.title(f'TMT TB Difference (OxygenAbs_index=5 - OxygenAbs_index=4)')
+        plt.xlabel('Longitude Index')
+        plt.ylabel('Latitude Index')
     plt.show()
     print()

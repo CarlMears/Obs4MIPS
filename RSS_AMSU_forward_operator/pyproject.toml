@@ -12,6 +12,16 @@ license = { text = "Proprietary" }
 authors = [
   { name = "Remote Sensing Systems" }
 ]
+dependencies = [
+    "numpy>=1.26.0",
+    "calc_tb_amsu"
+]
+
+[project.optional-dependencies]
+plotting = [
+    "matplotlib",
+    "rss_plotting"
+]
 
 [tool.setuptools]
 package-dir = {"" = "."}
